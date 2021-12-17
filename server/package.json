@@ -1,0 +1,39 @@
+{
+  "name": "keeper-part-3-starting",
+  "version": "1.0.0",
+  "keywords": [],
+  "main": "src/index.js",
+  "dependencies": {
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.60",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "lodash": "^4.17.21",
+    "mongodb": "^4.2.1",
+    "mongoose": "^6.1.1",
+    "path": "^0.12.7",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
+    "react-scripts": "^3.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^6.4.0",
+    "typescript": "3.3.3"
+  },
+  "scripts": {
+    "server": "nodemon server.js",
+    "client": "cd ../ && npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
