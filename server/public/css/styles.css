@@ -1,8 +1,4 @@
-/* * {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-} */
+
 html {
   font-family: "Montserrat", sans-serif;
 }
@@ -57,46 +53,24 @@ footer p {
 
 .card {
   background-color: #9ee6e859;
-  border-radius: 3rem;
-  margin-bottom: 2rem;  
+  border-radius: 2rem;
   box-shadow: 0 1px 5px rgb(138, 137, 137);
-}
-/* 
-.note {
-  background: #fff;
-  border-radius: 7px;
-  box-shadow: 0 2px 5px #ccc;
-  padding: 10px;
-  width: 240px;
-  margin: 16px;
-  float: left;
-}
-.note h1 {
-  font-size: 1.1em;
-  margin-bottom: 6px;
-  word-wrap: break-word;
-  white-space: normal;
-}
-.note p {
-  font-size: 1.1em;
-  margin-bottom: 10px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  padding: 0, 0, 0, 0;
+  /* text-align: left; */
 }
 
-.note button {
-  position: relative;
-  float: right;
-  margin-right: 10px;
-  background: #fff;
-  color: #5cff33;
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  cursor: pointer;
-  outline: none;
-} */
+.card-body {
+  padding-top: .4rem;
+  padding-bottom: .4rem;
+}
+
+.social-block {
+  padding: 1rem;
+}
+
+.card.oAuth:hover {
+  background-color: #9ee6e8f8;
+}
 
 .page-container {
   position:relative;
@@ -106,39 +80,3 @@ footer p {
 .content-wrap {
   padding-bottom: 2.5rem;
 }
-
-/* form.create-note {
-  position: relative;
-  width: 480px;
-  margin: 30px auto 20px auto;
-  background: #fff;
-  padding: 15px;
-  border-radius: 7px;
-  box-shadow: 0 1px 5px rgb(138, 137, 137);
-}
-form.create-note input,
-form.create-note textarea {
-  width: 100%;
-  border: none;
-  padding: 4px;
-  outline: none;
-  font-size: 1.2em;
-  font-family: inherit;
-  resize: none;
-}
-form.create-note button {
-  position: absolute;
-  right: 18px;
-  bottom: -18px;
-  padding-top: 2px;
-  padding-left: 1px;
-  background: #5cff33;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
-  outline: none;
-} */

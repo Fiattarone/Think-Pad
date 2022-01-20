@@ -12,6 +12,9 @@ const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
+const LinkedInStrategy = require("passport-linkedin-oauth2").Strategy;
+const TwitterStrategy = require("passport-twitter").Strategy;
+const GithubStrategy = require("passport-github").Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const ejs = require("ejs");
 
@@ -70,6 +73,9 @@ const userSchema = new mongoose.Schema({
   password: String,
   googleId: String,
   facebookId: String,
+  linkedInId: String, 
+  twitterId: String, 
+  githubId: String,
   noteList: [noteSchema]
 });
 
@@ -86,15 +92,20 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
+  // console.log("What is the id: " + id + " and the type is: " + typeof(id))
+  if( !mongoose.Types.ObjectId.isValid(id) ) {
+    id = mongoose.Types.ObjectId(id+"00");
+  }
   User.findById(id, function(err, user) {
     done(err, user);
   });
+  
 });
 
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET
-  // callbackURL: "https://evening-sands-86794.herokuapp.com/auth/google/secrets",
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: "http://localhost:3000/auth/google/think-it"
   // userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
   function(accessToken, refreshToken, profile, cb) {
@@ -107,8 +118,8 @@ passport.use(new GoogleStrategy({
 
 passport.use(new FacebookStrategy({
     clientID: process.env.FB_ID,
-    clientSecret: process.env.FB_SECRET
-    // callbackURL: "https://evening-sands-86794.herokuapp.com/auth/facebook/secrets"
+    clientSecret: process.env.FB_SECRET,
+    callbackURL: "http://localhost:3000/auth/facebook/think-it"
   },
   function(accessToken, refreshToken, profile, done) {
     console.log(profile);
@@ -117,6 +128,71 @@ passport.use(new FacebookStrategy({
       done(null, user);
     });
   }
+));
+
+// Requires a consumer key option
+passport.use(new TwitterStrategy({
+  consumerKey: process.env.T_ID,
+  consumerSecret: process.env.T_SECRET,
+  callbackURL: "http://localhost:3000/auth/twitter/think-it"
+},
+function(token, tokenSecret, profile, done) {
+  console.log(profile);
+  User.findOrCreate({ twitterId: profile.id}, function(err, user) {
+    if (err) { return done(err); }
+    done(null, user);
+  });
+}
+));
+
+// Requires a consumer key option
+// passport.use(new LinkedInStrategy({
+//   consumerKey: process.env.LI_ID,
+//   consumerSecret: process.env.LI_SECRET,
+//   callbackURL: "http://localhost:3000/auth/linkedin/think-it"
+// },
+// function(token, tokenSecret, profile, done) {
+//   console.log(profile);
+//   User.findOrCreate({ linkedInId: profile.id}, function(err, user) {
+//     if (err) { return done(err); }
+//     done(null, user);
+//   });
+// }
+// ));
+
+passport.use(new LinkedInStrategy({
+  clientID: process.env.LI_ID,
+  clientSecret: process.env.LI_SECRET,
+  callbackURL: "http://localhost:3000/auth/linkedin/think-it",
+  scope: ['r_emailaddress', 'r_liteprofile'],
+  state: true
+}, function(accessToken, refreshToken, profile, done) {
+  // asynchronous verification, for effect...
+  process.nextTick(function () {
+    // To keep the example simple, the user's LinkedIn profile is returned to
+    // represent the logged-in user. In a typical application, you would want
+    // to associate the LinkedIn account with a user record in your database,
+    // and return that user instead.
+    // return done(null, profile);
+    User.findOrCreate({ linkedInId: profile.id}, function(err, user) {
+          if (err) { return done(err); }
+          done(null, user);
+        });
+  });
+}));
+
+passport.use(new GithubStrategy({
+  clientID: process.env.GH_ID,
+  clientSecret: process.env.GH_SECRET,
+  callbackURL: "http://localhost:3000/auth/github/think-it"
+},
+function(accessToken, refreshToken, profile, done) {
+  console.log(profile);
+  User.findOrCreate({ githubId: profile.id}, function(err, user) {
+    if (err) { return done(err); }
+    done(null, user);
+  });
+}
 ));
 
 app.get("/api", (req, res) => {
@@ -139,6 +215,61 @@ app.get("/note", async (req, res) => {
       }
     });
   }
+})
+
+app.get("/auth/google",
+  passport.authenticate("google", { scope: ["profile"] })
+);
+
+app.get("/auth/google/think-it",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  function(req, res) {
+    res.redirect("/home");
+  }
+);
+
+app.get("/auth/facebook",
+passport.authenticate("facebook")
+);
+
+app.get("/auth/facebook/think-it",
+  passport.authenticate("facebook",
+  { successRedirect: "/home",
+    failureRedirect: "/login" })
+);
+
+app.get("/auth/linkedin", 
+passport.authenticate("linkedin")
+);
+
+app.get("/auth/linkedin/think-it",
+  passport.authenticate("linkedin",
+  { successRedirect: "/home",
+    failureRedirect: "/login" })
+);
+
+app.get("/auth/twitter",
+passport.authenticate("twitter")
+);
+
+app.get("/auth/twitter/think-it",
+  passport.authenticate("twitter",
+  { successRedirect: "/home",
+    failureRedirect: "/login" })
+);
+
+app.get("/auth/github", 
+passport.authenticate("github")
+);
+
+app.get("/auth/github/think-it",
+  passport.authenticate("github",
+  { successRedirect: "/home",
+    failureRedirect: "/login" })
+);
+
+app.get("/privacy-policy", (req, res) => {
+  res.render("privacy")
 })
 
 app.post("/", async (req, res) => {
@@ -219,7 +350,6 @@ app.get("/welcome", (req, res) => {
 });
 
 app.get("/logout", function(req, res) {
-  //drop notebook Db
   req.logout();
   res.redirect("/");
 });
@@ -274,6 +404,7 @@ app.post("/register", function(req, res) {
     console.log("Sending React App");
     res.sendFile(path.join(__dirname, "..", "client", "build", "index.html"));
   });
+
 app.get("*", (req, res) => {
     console.log("Auth Status: " + req.isAuthenticated());
     res.redirect("/");
