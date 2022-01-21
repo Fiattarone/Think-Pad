@@ -38,7 +38,7 @@
     "typescript": "3.3.3"
   },
   "scripts": {
-    "server": "cd client && npm run build && cd ../ && nodemon server.js",
+    "server": "node server.js",
     "client": "cd ../ && npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
