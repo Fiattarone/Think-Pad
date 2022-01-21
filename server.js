@@ -105,7 +105,7 @@ passport.deserializeUser(function(id, done) {
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "http://localhost:3000/auth/google/think-it"
+  callbackURL: "https://aqueous-springs-25026.herokuapp.com/auth/google/think-it"
   // userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
   function(accessToken, refreshToken, profile, cb) {
@@ -119,7 +119,7 @@ passport.use(new GoogleStrategy({
 passport.use(new FacebookStrategy({
     clientID: process.env.FB_ID,
     clientSecret: process.env.FB_SECRET,
-    callbackURL: "http://localhost:3000/auth/facebook/think-it"
+    callbackURL: "https://aqueous-springs-25026.herokuapp.com/auth/facebook/think-it"
   },
   function(accessToken, refreshToken, profile, done) {
     console.log(profile);
@@ -131,29 +131,14 @@ passport.use(new FacebookStrategy({
 ));
 
 // Requires a consumer key option
-passport.use(new TwitterStrategy({
-  consumerKey: process.env.T_ID,
-  consumerSecret: process.env.T_SECRET,
-  callbackURL: "http://localhost:3000/auth/twitter/think-it"
-},
-function(token, tokenSecret, profile, done) {
-  console.log(profile);
-  User.findOrCreate({ twitterId: profile.id}, function(err, user) {
-    if (err) { return done(err); }
-    done(null, user);
-  });
-}
-));
-
-// Requires a consumer key option
-// passport.use(new LinkedInStrategy({
-//   consumerKey: process.env.LI_ID,
-//   consumerSecret: process.env.LI_SECRET,
-//   callbackURL: "http://localhost:3000/auth/linkedin/think-it"
+// passport.use(new TwitterStrategy({
+//   consumerKey: process.env.T_ID,
+//   consumerSecret: process.env.T_SECRET,
+//   callbackURL: "https://aqueous-springs-25026.herokuapp.com/auth/twitter/think-it"
 // },
 // function(token, tokenSecret, profile, done) {
 //   console.log(profile);
-//   User.findOrCreate({ linkedInId: profile.id}, function(err, user) {
+//   User.findOrCreate({ twitterId: profile.id}, function(err, user) {
 //     if (err) { return done(err); }
 //     done(null, user);
 //   });
@@ -163,7 +148,7 @@ function(token, tokenSecret, profile, done) {
 passport.use(new LinkedInStrategy({
   clientID: process.env.LI_ID,
   clientSecret: process.env.LI_SECRET,
-  callbackURL: "http://localhost:3000/auth/linkedin/think-it",
+  callbackURL: "https://aqueous-springs-25026.herokuapp.com/auth/linkedin/think-it",
   scope: ['r_emailaddress', 'r_liteprofile'],
   state: true
 }, function(accessToken, refreshToken, profile, done) {
@@ -179,7 +164,7 @@ passport.use(new LinkedInStrategy({
 passport.use(new GithubStrategy({
   clientID: process.env.GH_ID,
   clientSecret: process.env.GH_SECRET,
-  callbackURL: "http://localhost:3000/auth/github/think-it"
+  callbackURL: "https://aqueous-springs-25026.herokuapp.com/auth/github/think-it"
 },
 function(accessToken, refreshToken, profile, done) {
   console.log(profile);
