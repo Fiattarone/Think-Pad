@@ -13,7 +13,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
 const LinkedInStrategy = require("passport-linkedin-oauth2").Strategy;
-const TwitterStrategy = require("passport-twitter").Strategy;
+const TwitterStrategy = require("passport-twitter-oauth2").Strategy;
 const GithubStrategy = require("passport-github").Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const ejs = require("ejs");
@@ -131,19 +131,19 @@ passport.use(new FacebookStrategy({
 ));
 
 // Requires a consumer key option
-// passport.use(new TwitterStrategy({
-//   consumerKey: process.env.T_ID,
-//   consumerSecret: process.env.T_SECRET,
-//   callbackURL: "https://aqueous-springs-25026.herokuapp.com/auth/twitter/think-it"
-// },
-// function(token, tokenSecret, profile, done) {
-//   console.log(profile);
-//   User.findOrCreate({ twitterId: profile.id}, function(err, user) {
-//     if (err) { return done(err); }
-//     done(null, user);
-//   });
-// }
-// ));
+passport.use(new TwitterStrategy({
+  consumerKey: process.env.T_ID,
+  consumerSecret: process.env.T_SECRET,
+  callbackURL: "https://aqueous-springs-25026.herokuapp.com/auth/twitter/think-it"
+},
+function(token, tokenSecret, profile, done) {
+  console.log(profile);
+  User.findOrCreate({ twitterId: profile.id}, function(err, user) {
+    if (err) { return done(err); }
+    done(null, user);
+  });
+}
+));
 
 passport.use(new LinkedInStrategy({
   clientID: process.env.LI_ID,
